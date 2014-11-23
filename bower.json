@@ -1,0 +1,32 @@
+{
+  "name": "yeep",
+  "version": "0.0.1",
+  "homepage": "https://github.com/vokalinteractive.com/yeep",
+  "authors": [
+    "Jarrett Widman <jarrett.widman@vokalinteractive.com>"
+  ],
+  "description": "Pure JS sound effects with Web Audio",
+  "main": "source/yeep.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "yeep",
+    "javascript",
+    "web",
+    "audio",
+    "sound",
+    "effects"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "noise.js": "git://github.com/zacharydenton/noise.js.git"
+  }
+}
