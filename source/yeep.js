@@ -37,12 +37,12 @@
     yeep.notes = ( function ()
     {
         var result = {};
-        var notes = [ "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" ];
+        var notes = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ];
         var noteIndex = 0;
 
-        for ( var freq = 55; freq < 20000; freq *= Math.pow( 2, 1 / 12 ) )
+        for ( var freq = 16.35161; freq < 20000; freq *= Math.pow( 2, 1 / 12 ) )
         {
-            result[ notes[ noteIndex % 12 ] + ( 1 + Math.floor( noteIndex / 12 ) ) ] = freq;
+            result[ notes[ noteIndex % 12 ] + ( Math.floor( noteIndex / 12 ) ) ] = freq;
             noteIndex++;
         }
         return ( result );
@@ -181,35 +181,35 @@
     yeep.tracks = {
         "ping": function ()
         {
-            yeep.tones.ar( { freq: yeep.notes.C4 } );
+            yeep.tones.ar( { freq: yeep.notes.C5 } );
         },
         "add": function ()
         {
-            yeep.tones.ar( { freq: yeep.notes.C4 } );
-            yeep.tones.ar( { freq: yeep.notes.E4, delaySec: 0.2 } );
+            yeep.tones.ar( { freq: yeep.notes.C5 } );
+            yeep.tones.ar( { freq: yeep.notes.E5, delaySec: 0.2 } );
         },
         "remove": function ()
         {
-            yeep.tones.ar( { freq: yeep.notes.E4 } );
-            yeep.tones.ar( { freq: yeep.notes.C4, delaySec: 0.2 } );
+            yeep.tones.ar( { freq: yeep.notes.E5 } );
+            yeep.tones.ar( { freq: yeep.notes.C5, delaySec: 0.2 } );
         },
         "ring": function ()
         {
             for ( var i = 0; i < 2; i++ )
             {
-                yeep.tones.ar( { freq: yeep.notes.C4, delaySec: 0.8 * i } );
-                yeep.tones.ar( { freq: yeep.notes.C4, delaySec: 0.8 * i + 0.3 } );
-                yeep.tones.ar( { freq: yeep.notes.G4, delaySec: 0.8 * i + 0.4 } );
-                yeep.tones.ar( { freq: yeep.notes.E4, delaySec: 0.8 * i + 0.5 } );
+                yeep.tones.ar( { freq: yeep.notes.C5, delaySec: 0.8 * i } );
+                yeep.tones.ar( { freq: yeep.notes.C5, delaySec: 0.8 * i + 0.3 } );
+                yeep.tones.ar( { freq: yeep.notes.G5, delaySec: 0.8 * i + 0.4 } );
+                yeep.tones.ar( { freq: yeep.notes.E5, delaySec: 0.8 * i + 0.5 } );
             }
         },
         "sadTrombone": function ()
         {
             var base = { oscType: "triangle", delaySec: 0, attackSec: 0.5, sustainSec: 0.5, decayVol: 1 };
 
-            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "D3" ], delaySec: 0 } ) );
-            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "C#3" ], delaySec: 0.75, sustainSec: 0.5 } ) );
-            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "C3" ], delaySec: 1.5, sustainSec: 0.5 } ) );
+            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "D4" ], delaySec: 0 } ) );
+            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "C#4" ], delaySec: 0.75, sustainSec: 0.5 } ) );
+            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "C4" ], delaySec: 1.5, sustainSec: 0.5 } ) );
             yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "B3" ], delaySec: 2.25, sustainSec: 1.5, releaseSec: 0.5 } ) );
         },
         "snare": function ( options )
@@ -292,7 +292,7 @@
             yeep.tones.adsr( extend( {}, base, { delaySec: 0.4, freq: yeep.notes["B4"] } ) );
 
             yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["F#3"], sustainSec: 0.8 } ) );
-            yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["C4"], sustainSec: 0.8 } ) );
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["C5"], sustainSec: 0.8 } ) );
         }
     };
 
