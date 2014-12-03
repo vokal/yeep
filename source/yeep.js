@@ -66,7 +66,7 @@
                 releaseSec: 0.02
             };
 
-            var set = extend ( {}, defaults, options );
+            var set = extend( {}, defaults, options );
 
             var now = audioCtx.currentTime;
 
@@ -90,7 +90,7 @@
                 releaseSec: 0.02
             };
 
-            var set = extend ( {}, defaults, options );
+            var set = extend( {}, defaults, options );
 
             var now = audioCtx.currentTime;
 
@@ -118,7 +118,7 @@
                 downSec: 0.5
             };
 
-            var set = extend ( {}, defaults, options );
+            var set = extend( {}, defaults, options );
 
             set.attackSec = set.upSec;
             set.attackVol = set.vol;
@@ -144,7 +144,7 @@
                 postGainFilters: []
             };
 
-            var set = extend ( {}, defaults, options );
+            var set = extend( {}, defaults, options );
 
             var osc = audioCtx.createOscillator();
             osc.frequency.setValueAtTime( set.freq, 0 );
@@ -218,8 +218,8 @@
             var lp = audioCtx.createBiquadFilter();
 
             lp.type = "lowpass";
-            lp.frequency.setValueAtTime(5000, audioCtx.currentTime + ( options.delaySec || 0 ));
-            lp.frequency.exponentialRampToValueAtTime(3000, audioCtx.currentTime + 0.1 + ( options.delaySec || 0 ));
+            lp.frequency.setValueAtTime( 5000, audioCtx.currentTime + ( options.delaySec || 0 ) );
+            lp.frequency.exponentialRampToValueAtTime( 3000, audioCtx.currentTime + 0.1 + ( options.delaySec || 0 ) );
 
             var noise = audioCtx.createWhiteNoise();
             var noiseGain = yeep.gains.ar( { attackSec: 0, attackVol: 2, releaseSec: 1, delaySec: options.delaySec || 0 } );
@@ -233,8 +233,8 @@
             var lp = audioCtx.createBiquadFilter();
             lp.type = "lowpass";
             lp.frequency.value = 500;
-            lp.frequency.setValueAtTime(500, audioCtx.currentTime + ( options.delaySec || 0 ));
-            lp.frequency.exponentialRampToValueAtTime(1, audioCtx.currentTime + 0.4 + ( options.delaySec || 0 ));
+            lp.frequency.setValueAtTime( 500, audioCtx.currentTime + ( options.delaySec || 0 ) );
+            lp.frequency.exponentialRampToValueAtTime( 1, audioCtx.currentTime + 0.4 + ( options.delaySec || 0 ) );
 
             var postGain = audioCtx.createGain();
             postGain.gain.value = 1.5; //TODO: doesn't amplify in firefox, ok in chrome
@@ -248,8 +248,8 @@
 
             lp.type = "highpass";
             lp.frequency.value = 1500;
-            lp.frequency.setValueAtTime(1500, audioCtx.currentTime + ( options.delaySec || 0 ));
-            lp.frequency.exponentialRampToValueAtTime(3000, audioCtx.currentTime + 0.5 + ( options.delaySec || 0 ));
+            lp.frequency.setValueAtTime( 1500, audioCtx.currentTime + ( options.delaySec || 0 ) );
+            lp.frequency.exponentialRampToValueAtTime( 3000, audioCtx.currentTime + 0.5 + ( options.delaySec || 0 ) );
 
             var noise = audioCtx.createWhiteNoise();
             var noiseGain = yeep.gains.ar( { attackSec: 0, attackVol: 1, releaseSec: 2, delaySec: options.delaySec || 0 } );
