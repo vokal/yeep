@@ -140,15 +140,18 @@
                 decayVol: 0.8,
                 sustainSec: 0.2,
                 releaseSec: 0.02,
-                preGainFilters: []
+                preGainFilters: [],
+                postGainFilters: []
             };
 
             var set = extend ( {}, defaults, options );
 
             var osc = audioCtx.createOscillator();
+            osc.frequency.setValueAtTime( set.freq, 0 );
             osc.type = set.oscType;
 
             var lastNode = osc;
+            var gainNode = yeep.gains.adsr( set );
 
             set.preGainFilters.forEach( function ( filter )
             {
@@ -156,15 +159,20 @@
                 lastNode = filter;
             } );
 
-            var now = audioCtx.currentTime;
-
-            osc.frequency.setValueAtTime( set.freq, 0 );
-
-            var gainNode = yeep.gains.adsr( set );
-
             lastNode.connect( gainNode );
-            gainNode.connect( audioCtx.destination );
-            osc.start( 0 );
+            lastNode = gainNode;
+
+            set.postGainFilters.forEach( function ( filter )
+            {
+                lastNode.connect( filter );
+                lastNode = filter;
+            } );
+
+            lastNode.connect( audioCtx.destination );
+
+            var now = audioCtx.currentTime;
+            osc.start( now );
+            osc.stop( now + set.delaySec + set.attackSec + set.decaySec + set.sustainSec + set.releaseSec );
 
             return ( lastNode );
         }
@@ -197,10 +205,12 @@
         },
         "sadTrombone": function ()
         {
-            yeep.tones.adsr( { oscType: "sawtooth", freq: yeep.notes[ "D3" ], delaySec: 0, attackSec: 0.5, sustainSec: 0.5 } );
-            yeep.tones.adsr( { oscType: "sawtooth", freq: yeep.notes[ "C#3" ], delaySec: 0.75, attackSec: 0.5, sustainSec: 0.5 } );
-            yeep.tones.adsr( { oscType: "sawtooth", freq: yeep.notes[ "C3" ], delaySec: 1.5, attackSec: 0.5, sustainSec: 0.5 } );
-            yeep.tones.adsr( { oscType: "sawtooth", freq: yeep.notes[ "B3" ], delaySec: 2.25, attackSec: 0.5, sustainSec: 1.5, releaseSec: 0.5 } );
+            var base = { oscType: "triangle", delaySec: 0, attackSec: 0.5, sustainSec: 0.5, decayVol: 1 };
+
+            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "D3" ], delaySec: 0 } ) );
+            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "C#3" ], delaySec: 0.75, sustainSec: 0.5 } ) );
+            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "C3" ], delaySec: 1.5, sustainSec: 0.5 } ) );
+            yeep.tones.adsr( extend( {}, base, { freq: yeep.notes[ "B3" ], delaySec: 2.25, sustainSec: 1.5, releaseSec: 0.5 } ) );
         },
         "snare": function ( options )
         {
@@ -208,12 +218,11 @@
             var lp = audioCtx.createBiquadFilter();
 
             lp.type = "lowpass";
-            lp.frequency.value = 100;
-            lp.frequency.setValueAtTime(100, audioCtx.currentTime);
-            lp.frequency.exponentialRampToValueAtTime(9000, audioCtx.currentTime + 0.1);
+            lp.frequency.setValueAtTime(5000, audioCtx.currentTime + ( options.delaySec || 0 ));
+            lp.frequency.exponentialRampToValueAtTime(3000, audioCtx.currentTime + 0.1 + ( options.delaySec || 0 ));
 
             var noise = audioCtx.createWhiteNoise();
-            var noiseGain = yeep.gains.ar( { attackSec: 0, attackVol: 1, releaseSec: 1, delaySec: options.delaySec || 0 } );
+            var noiseGain = yeep.gains.ar( { attackSec: 0, attackVol: 2, releaseSec: 1, delaySec: options.delaySec || 0 } );
 
             noise.connect( noiseGain );
             noiseGain.connect( lp );
@@ -224,10 +233,13 @@
             var lp = audioCtx.createBiquadFilter();
             lp.type = "lowpass";
             lp.frequency.value = 500;
-            lp.frequency.setValueAtTime(500, audioCtx.currentTime);
-            lp.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 0.6);
+            lp.frequency.setValueAtTime(500, audioCtx.currentTime + ( options.delaySec || 0 ));
+            lp.frequency.exponentialRampToValueAtTime(1, audioCtx.currentTime + 0.4 + ( options.delaySec || 0 ));
 
-            yeep.tones.ar( extend( {}, { oscType: "square", freq: yeep.notes[ "A1" ], upSec: 0.02, downSec: 0.6, vol: 1, preGainFilters: [ lp ] }, options ) );
+            var postGain = audioCtx.createGain();
+            postGain.gain.value = 1.5; //TODO: doesn't amplify in firefox, ok in chrome
+
+            yeep.tones.ar( extend( {}, { oscType: "square", freq: yeep.notes[ "A1" ], upSec: 0.02, downSec: 0.6, vol: 1, postGainFilters: [ lp, postGain ] }, options ) );
         },
         "splash": function ( options )
         {
@@ -235,9 +247,9 @@
             var lp = audioCtx.createBiquadFilter();
 
             lp.type = "highpass";
-            lp.frequency.value = 2000;
-            lp.frequency.setValueAtTime(2000, audioCtx.currentTime);
-            lp.frequency.exponentialRampToValueAtTime(3000, audioCtx.currentTime + 0.5);
+            lp.frequency.value = 1500;
+            lp.frequency.setValueAtTime(1500, audioCtx.currentTime + ( options.delaySec || 0 ));
+            lp.frequency.exponentialRampToValueAtTime(3000, audioCtx.currentTime + 0.5 + ( options.delaySec || 0 ));
 
             var noise = audioCtx.createWhiteNoise();
             var noiseGain = yeep.gains.ar( { attackSec: 0, attackVol: 1, releaseSec: 2, delaySec: options.delaySec || 0 } );
@@ -249,8 +261,38 @@
         "rimshot": function ()
         {
             yeep.tracks.snare();
-            yeep.tracks.kick( { delaySec: 0.2 } );
-            yeep.tracks.splash( { delaySec: 0.65 } );
+            yeep.tracks.kick( { delaySec: 0.3 } );
+            yeep.tracks.splash( { delaySec: 0.9 } );
+        },
+        "beat": function ()
+        {
+            yeep.tracks.kick( { delaySec: 0 } );
+            yeep.tracks.kick( { delaySec: 0.125 } );
+            yeep.tracks.kick( { delaySec: 0.5 } );
+            yeep.tracks.kick( { delaySec: 0.625 } );
+
+            yeep.tracks.snare( { delaySec: 0.5 } );
+
+            yeep.tracks.splash( { delaySec: 0 } );
+            yeep.tracks.splash( { delaySec: 0.25 } );
+            yeep.tracks.splash( { delaySec: 0.5 } );
+            yeep.tracks.splash( { delaySec: 0.75 } );
+        },
+        "zelda": function ()
+        {
+            var base = { oscType: "triangle", attackSec: 0.1, attackVol: 0.4, decayVol: 0.4, releaseSec: 0.1 };
+
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.0, freq: yeep.notes["D#3"] } ) );
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.0, freq: yeep.notes["A4"] } ) );
+
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.2, freq: yeep.notes["E3"] } ) );
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.2, freq: yeep.notes["A#4"] } ) );
+
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.4, freq: yeep.notes["F3"] } ) );
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.4, freq: yeep.notes["B4"] } ) );
+
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["F#3"], sustainSec: 0.8 } ) );
+            yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["C4"], sustainSec: 0.8 } ) );
         }
     };
 
