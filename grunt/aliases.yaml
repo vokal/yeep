@@ -1,0 +1,4 @@
+default:
+  - clean
+  - concat
+  - uglify

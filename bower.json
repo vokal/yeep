@@ -6,7 +6,7 @@
     "Jarrett Widman <jarrett.widman@vokalinteractive.com>"
   ],
   "description": "Pure JS sound effects with Web Audio",
-  "main": "source/yeep.js",
+  "main": "build/yeep.js",
   "moduleType": [
     "globals"
   ],
@@ -24,9 +24,11 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "source",
+    "grunt"
   ],
-  "dependencies": {
+  "devDependencies": {
     "noise.js": "git://github.com/zacharydenton/noise.js.git"
   }
 }
