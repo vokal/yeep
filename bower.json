@@ -28,7 +28,7 @@
     "source",
     "grunt"
   ],
-  "devDependencies": {
+  "dependencies": {
     "noise.js": "git://github.com/zacharydenton/noise.js.git"
   }
 }
