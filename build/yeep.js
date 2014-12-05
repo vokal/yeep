@@ -13,6 +13,7 @@
     yeep.envelopes = {};
     yeep.tones = {};
     yeep.notes = {};
+    yeep.effects = {};
 
     yeep.log = function ()
     {
@@ -49,6 +50,45 @@
     return ( yeep );
 
 } )( this.yeep = {} );
+
+
+( function ( effects )
+{
+    "use strict";
+
+    effects.reverb = function ( options )
+    {
+        var defaults = {
+            releaseSec: 3,
+            attackVol: 1
+        };
+
+        var set = yeep.extend( {}, defaults, options );
+
+        var channels = 2;
+        var frameCount = yeep.audioCtx.sampleRate * set.releaseSec;
+        var buffer = yeep.audioCtx.createBuffer( 2, frameCount, yeep.audioCtx.sampleRate );
+
+        for ( var channelIndex = 0; channelIndex < channels; channelIndex++ )
+        {
+           var channel = buffer.getChannelData( channelIndex );
+           for ( var i = 0; i < frameCount; i++ )
+           {
+                var progress = ( frameCount - i ) / frameCount;
+                channel[ i ] = Math.pow( progress, 2 ) * ( 2 * Math.random() - 1 );
+           }
+        }
+
+        var convolver = yeep.audioCtx.createConvolver();
+        convolver.normalize = true;
+        convolver.buffer = buffer;
+
+        return ( convolver );
+    };
+
+    return ( effects );
+
+} )( this.yeep.effects );
 
 
 ( function ( envelopes )
@@ -156,6 +196,19 @@
         set.releaseSec = set.downSec;
 
         return( tones.adsr( set ) );
+    };
+
+    tones.organ = function ( options )
+    {
+        var defaults = {
+            postGainFilters: [ yeep.effects.reverb() ],
+            sustainSec: 0.5,
+            oscType: "triangle"
+        };
+
+        var set = yeep.extend( {}, defaults, options );
+
+        return( tones.adsr ( set ) );
     };
 
     tones.adsr = function ( options )
@@ -270,6 +323,14 @@
 
             yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["F#3"], sustainSec: 0.8 } ) );
             yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["C5"], sustainSec: 0.8 } ) );
+        },
+        "organ-chord": function ()
+        {
+            yeep.tones.organ( { freq: yeep.notes.C2 } );
+            yeep.tones.organ( { freq: yeep.notes.C3 } );
+            yeep.tones.organ( { freq: yeep.notes.E3 } );
+            yeep.tones.organ( { freq: yeep.notes.G3 } );
+            yeep.tones.organ( { freq: yeep.notes.G5 } );
         }
     };
 

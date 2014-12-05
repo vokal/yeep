@@ -25,6 +25,19 @@
         return( tones.adsr( set ) );
     };
 
+    tones.organ = function ( options )
+    {
+        var defaults = {
+            postGainFilters: [ yeep.effects.reverb() ],
+            sustainSec: 0.5,
+            oscType: "triangle"
+        };
+
+        var set = yeep.extend( {}, defaults, options );
+
+        return( tones.adsr ( set ) );
+    };
+
     tones.adsr = function ( options )
     {
         var defaults = {
