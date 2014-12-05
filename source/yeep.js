@@ -13,6 +13,7 @@
     yeep.envelopes = {};
     yeep.tones = {};
     yeep.notes = {};
+    yeep.effects = {};
 
     yeep.log = function ()
     {

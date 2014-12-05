@@ -57,6 +57,14 @@
 
             yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["F#3"], sustainSec: 0.8 } ) );
             yeep.tones.adsr( extend( {}, base, { delaySec: 0.6, freq: yeep.notes["C5"], sustainSec: 0.8 } ) );
+        },
+        "organ-chord": function ()
+        {
+            yeep.tones.organ( { freq: yeep.notes.C2 } );
+            yeep.tones.organ( { freq: yeep.notes.C3 } );
+            yeep.tones.organ( { freq: yeep.notes.E3 } );
+            yeep.tones.organ( { freq: yeep.notes.G3 } );
+            yeep.tones.organ( { freq: yeep.notes.G5 } );
         }
     };
 
