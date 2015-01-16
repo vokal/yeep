@@ -8,6 +8,30 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
+    <script src="https://raw.githubusercontent.com/zacharydenton/noise.js/master/noise.js"></script>
+    <script src="https://raw.githubusercontent.com/jrit/yeep/master/build/yeep.js"></script>
+
+    <script>
+        window.addEventListener("keydown", function( e )
+        {
+            e.preventDefault();
+            switch( e.keyCode )
+            {
+                case 65: yeep.tones.adsr( { freq: yeep.notes.A3 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 83: yeep.tones.adsr( { freq: yeep.notes.B3 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 68: yeep.tones.adsr( { freq: yeep.notes.C4 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 70: yeep.tones.adsr( { freq: yeep.notes.D4 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 71: yeep.tones.adsr( { freq: yeep.notes.E4 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 72: yeep.tones.adsr( { freq: yeep.notes.F4 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 74: yeep.tones.adsr( { freq: yeep.notes.G4 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 75: yeep.tones.adsr( { freq: yeep.notes.A4 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 76: yeep.tones.adsr( { freq: yeep.notes.B4 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 186: yeep.tones.adsr( { freq: yeep.notes.C5 * ( e.shiftKey ? 2 : 1 ) } ); break;
+                case 222: yeep.tones.adsr( { freq: yeep.notes.D5 * ( e.shiftKey ? 2 : 1 ) } ); break;
+            }
+        } );
+    </script>
+
     <title>Yeep</title>
   </head>
 
@@ -41,6 +65,29 @@
 
 <p>yeep is currently alpha, and can be used safely, but the API should not be expected to stay the same.</p>
       </section>
+
+
+
+<section class="inner">
+
+    <h1>yeep demo</h1>
+    <ul>
+        <li><button onclick="yeep.play('sadTrombone')">Sad Trombone</button></li>
+        <li><button onclick="yeep.play('ring')">Ring</button></li>
+        <li><button onclick="yeep.play('rimshot')">Rim Shot</button></li>
+        <li><button onclick="yeep.play('beat')">Beat</button></li>
+        <li><button onclick="yeep.play('zelda')">Zelda</button></li>
+        <li><button onclick="yeep.play('organ-chord')">Organ Chord</button></li>
+    </ul>
+
+    <h2>Play a Tune</h2>
+    <p>
+        Press the second letter row (asdfghjkl;') of the keyboad to play tones. Shift key goes up an octive. Note: don't hold keys down, repeat isn't optimized.
+    </p>
+</section>
+
+
+
     </div>
 
     <!-- FOOTER  -->
